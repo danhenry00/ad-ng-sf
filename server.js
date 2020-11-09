@@ -6,7 +6,7 @@ const app = express();
 
 const port = process.env.PORT || 3001;
 
-app.use(express.static(__dirname + '/dist/active-directory-javascript-singlepageapp-angular'));
+app.use(express.static(__dirname + '/dist/ad-ng-sf'));
 
 app.get('/*', (req,res) => res.sendFile(path.join(__dirname)));
 

@@ -161,12 +161,12 @@ Function ConfigureApplications
     $user = Get-AzureADUser -ObjectId $creds.Account.Id
 
    # Create the spa AAD application
-   Write-Host "Creating the AAD application (active-directory-javascript-singlepageapp-angular)"
+   Write-Host "Creating the AAD application (ad-ng-sf)"
    # create the application 
-   $spaAadApplication = New-AzureADApplication -DisplayName "active-directory-javascript-singlepageapp-angular" `
+   $spaAadApplication = New-AzureADApplication -DisplayName "ad-ng-sf" `
                                                -HomePage "http://localhost:4200/" `
                                                -ReplyUrls "http://localhost:4200/" `
-                                               -IdentifierUris "https://$tenantName/active-directory-javascript-singlepageapp-angular" `
+                                               -IdentifierUris "https://$tenantName/ad-ng-sf" `
                                                -AvailableToOtherTenants $True `
                                                -Oauth2AllowImplicitFlow $true `
                                                -PublicClient $False
@@ -184,12 +184,12 @@ Function ConfigureApplications
    }
 
 
-   Write-Host "Done creating the spa application (active-directory-javascript-singlepageapp-angular)"
+   Write-Host "Done creating the spa application (ad-ng-sf)"
 
    # URL of the AAD application in the Azure portal
    # Future? $spaPortalUrl = "https://portal.azure.com/#@"+$tenantName+"/blade/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/Overview/appId/"+$spaAadApplication.AppId+"/objectId/"+$spaAadApplication.ObjectId+"/isMSAApp/"
    $spaPortalUrl = "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/CallAnAPI/appId/"+$spaAadApplication.AppId+"/objectId/"+$spaAadApplication.ObjectId+"/isMSAApp/"
-   Add-Content -Value "<tr><td>spa</td><td>$currentAppId</td><td><a href='$spaPortalUrl'>active-directory-javascript-singlepageapp-angular</a></td></tr>" -Path createdApps.html
+   Add-Content -Value "<tr><td>spa</td><td>$currentAppId</td><td><a href='$spaPortalUrl'>ad-ng-sf</a></td></tr>" -Path createdApps.html
 
    $requiredResourcesAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.RequiredResourceAccess]
 

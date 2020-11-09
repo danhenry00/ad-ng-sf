@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "active-directory-javascript-singlepageapp-angular": {
+    "ad-ng-sf": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/active-directory-javascript-singlepageapp-angular",
+            "outputPath": "dist/ad-ng-sf",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -62,18 +62,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "active-directory-javascript-singlepageapp-angular:build"
+            "browserTarget": "ad-ng-sf:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "active-directory-javascript-singlepageapp-angular:build:production"
+              "browserTarget": "ad-ng-sf:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "active-directory-javascript-singlepageapp-angular:build"
+            "browserTarget": "ad-ng-sf:build"
           }
         },
         "test": {
@@ -110,18 +110,18 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "active-directory-javascript-singlepageapp-angular:serve"
+            "devServerTarget": "ad-ng-sf:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "active-directory-javascript-singlepageapp-angular:serve:production"
+              "devServerTarget": "ad-ng-sf:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "active-directory-javascript-singlepageapp-angular",
+  "defaultProject": "ad-ng-sf",
   "cli": {
     "analytics": false
   }

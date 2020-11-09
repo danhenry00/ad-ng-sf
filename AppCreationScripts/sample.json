@@ -4,14 +4,14 @@
       "Level": 100,
       "Client": "Angular SPA",
       "Service": "Microsoft Graph",
-      "RepositoryUrl": "active-directory-javascript-singlepageapp-angular",
+      "RepositoryUrl": "ad-ng-sf",
       "Endpoint": "AAD v2.0"
     },
 
     "AADApps": [
       {
         "Id": "spa",
-        "Name": "active-directory-javascript-singlepageapp-angular",
+        "Name": "ad-ng-sf",
         "Kind" :  "SinglePageApplication",
         "HomePage": "http://localhost:4200/",
         "ReplyUrls":"http://localhost:4200/",

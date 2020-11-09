@@ -8,7 +8,7 @@ products:
 - ms-graph
 - azure-active-directory
 description: "Demonstrates how to use MSAL Angular to login, logout, protect a route, and acquire an access token for a protected resource such as Microsoft Graph."
-urlFragment: "active-directory-javascript-singlepageapp-angular"
+urlFragment: "ad-ng-sf"
 ---
 
 # Angular Single-page Application built with MSAL Angular and Microsoft identity platform

@@ -59,9 +59,9 @@ Function Cleanup
     # Removes the applications
     Write-Host "Cleaning-up applications from tenant '$tenantName'"
 
-    Write-Host "Removing 'spa' (active-directory-javascript-singlepageapp-angular) if needed"
-    Get-AzureADApplication -Filter "DisplayName eq 'active-directory-javascript-singlepageapp-angular'"  | ForEach-Object {Remove-AzureADApplication -ObjectId $_.ObjectId }
-    $apps = Get-AzureADApplication -Filter "DisplayName eq 'active-directory-javascript-singlepageapp-angular'"
+    Write-Host "Removing 'spa' (ad-ng-sf) if needed"
+    Get-AzureADApplication -Filter "DisplayName eq 'ad-ng-sf'"  | ForEach-Object {Remove-AzureADApplication -ObjectId $_.ObjectId }
+    $apps = Get-AzureADApplication -Filter "DisplayName eq 'ad-ng-sf'"
     if ($apps)
     {
         Remove-AzureADApplication -ObjectId $apps.ObjectId
@@ -70,10 +70,10 @@ Function Cleanup
     foreach ($app in $apps) 
     {
         Remove-AzureADApplication -ObjectId $app.ObjectId
-        Write-Host "Removed active-directory-javascript-singlepageapp-angular.."
+        Write-Host "Removed ad-ng-sf.."
     }
     # also remove service principals of this app
-    Get-AzureADServicePrincipal -filter "DisplayName eq 'active-directory-javascript-singlepageapp-angular'" | ForEach-Object {Remove-AzureADServicePrincipal -ObjectId $_.Id -Confirm:$false}
+    Get-AzureADServicePrincipal -filter "DisplayName eq 'ad-ng-sf'" | ForEach-Object {Remove-AzureADServicePrincipal -ObjectId $_.Id -Confirm:$false}
     
 }
 
