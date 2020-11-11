@@ -1,0 +1,131 @@
+const express = require('express');
+const http = require('http');
+const path = require ('path');
+const jsforce = require('jsforce');
+
+var oauth2 = new jsforce.OAuth2({
+    instanceUrl : 'https://dhenry-dev-ed.my.salesforce.com',
+    clientId : '3MVG9KsVczVNcM8ybEIOVLexG8jwFj6EDXCGwOYKwydNPAF5R6k14.alxAlslZV_XNstr.nst0dN3lk.LPi_a',
+    clientSecret : 'F0135AEA52D269F8C70FFE7B4F70E2DD7D1D8400EE34D2513E82202DF2EAA661',
+    redirectUri : 'http://localhost:3001/oauth2/callback'
+});
+
+oauth2.authenticate('daniel@trailhead.com','Trail2020#V3HbPE12pv6ahArX8BpWDQ9i', (err, tokenResponse) =>
+{
+   console.log(err);
+   console.log(tokenResponse);
+   var conn = new jsforce.Connection({ oauth2 : oauth2, 
+                                       instanceUrl : 'https://dhenry-dev-ed.my.salesforce.com',
+                                       clientId : '3MVG9KsVczVNcM8ybEIOVLexG8jwFj6EDXCGwOYKwydNPAF5R6k14.alxAlslZV_XNstr.nst0dN3lk.LPi_a',
+                                       clientSecret : 'F0135AEA52D269F8C70FFE7B4F70E2DD7D1D8400EE34D2513E82202DF2EAA661',
+                                       redirectUri : 'http://localhost:3001/oauth2/callback'});
+  conn.authorize(tokenResponse.access_token, function(err, userInfo) {
+    if (err) { return console.error(err); }
+    // Now you can get the access token, refresh token, and instance URL information.
+    // Save them to establish connection next time.
+    console.log(conn.accessToken);
+    console.log(conn.refreshToken);
+    console.log(conn.instanceUrl);
+    console.log("User ID: " + userInfo.id);
+    console.log("Org ID: " + userInfo.organizationId);
+    // ...
+    res.send('success'); // or your desired response
+  });
+  
+  conn.query("SELECT Id, Name FROM Account LIMIT 10", function (err, result) {
+    if (err) { return console.error(err);}
+    console.log("total : " + result.totalSize);
+    console.log("fetched : " + result.records.length );
+  });
+});
+
+
+
+var conn = new jsforce.Connection({ oauth2 : oauth2 });
+
+const app = express();
+
+const port = process.env.PORT || 3001;
+
+app.use(express.static(__dirname + '/dist/ad-ng-sf'));
+
+app.get('/*', (req,res) => res.sendFile(path.join(__dirname)));
+
+app.get('/oauth2/auth', function(req, res) {
+  res.redirect(oauth2.tokenServiceUrl+'&grant_type=authorization_code');
+});
+//
+// Pass received authorization code and get access token
+//
+app.get('/oauth2/callback', function(req, res) {
+    var code = req.param('code');
+    conn.authorize(code, function(err, userInfo) {
+      if (err) { return console.error(err); }
+      // Now you can get the access token, refresh token, and instance URL information.
+      // Save them to establish connection next time.
+      console.log(conn.accessToken);
+      console.log(conn.refreshToken);
+      console.log(conn.instanceUrl);
+      console.log("User ID: " + userInfo.id);
+      console.log("Org ID: " + userInfo.organizationId);
+      // ...
+      conn.query("SELECT Id, Name, CreatedDate FROM Contact LIMIT 10", function(err, result) {
+        if (err) { res.json(err); }
+        console.log("total : " + result.totalSize);
+        res.json(result);
+      });
+      res.send('success'); // or your desired response
+    });
+  });
+app.get('/contacts/', function(req, res) {
+    conn.query("SELECT Id, Name, CreatedDate FROM Contact LIMIT 10", function(err, result) {
+        if (err) { res.json(err); }
+        console.log("total : " + result.totalSize);
+        res.json(result);
+      });
+});
+const server = http.createServer(app);
+
+server.listen(port, () => console.log('Running...'));
+//
+// OAuth2 client information can be shared with multiple connections.
+// accesstoken: aPrx.f3G28C1ueiHLWC2t.v5PVCqIbut6u0Qy8cARSD9MponDBhwOC8KzMxrRehpN2x53IJvCg%3D%3D
+/*
+var oauth2 = new jsforce.OAuth2({
+  // you can change loginUrl to connect to sandbox or prerelease env.
+  loginUrl : 'https://dhenry-dev-ed.my.salesforce.com',
+    clientId : '3MVG9KsVczVNcM8ybEIOVLexG8jwFj6EDXCGwOYKwydNPAF5R6k14.alxAlslZV_XNstr.nst0dN3lk.LPi_a',
+    clientSecret : 'F0135AEA52D269F8C70FFE7B4F70E2DD7D1D8400EE34D2513E82202DF2EAA661',
+    redirectUri : 'http://localhost:3001'
+});
+
+console.log('oauth2 url: ' + oauth2.getAuthorizationUrl());
+
+app.get(oauth2.getAuthorizationUrl(), (req, res) => {
+  console.log('res: ' + res);
+
+});
+//  
+// Get authorization url and redirect to it.
+//
+app.get('/oauth2/auth', function(req, res) {
+  res.redirect(oauth2.getAuthorizationUrl({ scope : 'api id web' }));
+});
+
+oauth2.authenticate('daniel@trailhead.com','Trail2020#V3HbPE12pv6ahArX8BpWDQ9i', (err, tokenResponse) =>
+{
+   console.log(err);
+   console.log(tokenResponse);
+});
+*/
+
+/*
+var records = [];
+conn.query("SELECT Id, Name FROM Account LIMIT 10", function (err, result) {
+  if (err) { return console.error(err);}
+  console.log("total : " + result.totalSize);
+  console.log("fetched : " + result.records.length );
+});
+
+console.log('conn : ' + conn.userInfo);
+*/

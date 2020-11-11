@@ -1,2 +1,14 @@
 <p class="welcome">Welcome to the MSAL.js Angular Quickstart!</p>
 <p>This sample demonstrates how to configure MSAL Angular to login, logout, protect a route, and acquire an access token for a protected resource such as the Microsoft Graph.</p>
+<iframe title="sfdc data" width="500" height="400" src="http://localhost:3001/" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox allow-forms allow-modals" scrolling="yes">
+    Loading...
+</iframe>
+<h1>Accounts:</h1>
+  <div *ngFor="let account of accounts | async">
+  ID: {{account.Id}} <br/>
+  Name: {{account.Name}}<br/><br/>
+  </div>
+
+  
+
+

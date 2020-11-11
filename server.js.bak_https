@@ -1,0 +1,64 @@
+const express = require('express');
+const http = require('http');
+const https = require('https');
+const path = require ('path');
+const jsforce = require('jsforce');
+
+let authorize_url = 'https://dhenry-dev-ed.my.salesforce.com/services/oauth2/authorize?client_id=3MVG9KsVczVNcM8ybEIOVLexG8jwFj6EDXCGwOYKwydNPAF5R6k14.alxAlslZV_XNstr.nst0dN3lk.LPi_a&client_secret=F0135AEA52D269F8C70FFE7B4F70E2DD7D1D8400EE34D2513E82202DF2EAA661&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Foauth2%2Fcallback&response_type=code';
+
+https.get(authorize_url, (res) => {
+    console.log('statusCode:', res.statusCode);
+    console.log('headers:', res.headers);
+  if(res.statusCode === 302)
+  {
+      https.get(res.headers.location, (res2) => {
+        console.log('statusCode2:', res2.statusCode);
+        console.log('headers2:', res2.headers);
+        res2.on('data', (d) => {
+            process.stdout.write(d);
+          });
+      });
+  }
+  
+});
+
+
+
+var oauth2 = new jsforce.OAuth2({
+    instanceUrl : 'https://dhenry-dev-ed.my.salesforce.com'
+});
+
+var conn = new jsforce.Connection({ 
+    oauth2 : oauth2
+});
+
+conn.login('daniel@trailhead.com','Trail2020#V3HbPE12pv6ahArX8BpWDQ9i', (err, userInfo) => {
+    if (err) { return console.error(err); }
+    // Now you can get the access token and instance URL information.
+    // Save them to establish connection next time.
+    console.log(conn.accessToken);
+    console.log(conn.instanceUrl);
+    // logged in user property
+    console.log("User ID: " + userInfo.id);
+    console.log("Org ID: " + userInfo.organizationId);
+
+});
+
+const app = express();
+
+const port = process.env.PORT || 3001;
+
+app.use(express.static(__dirname + '/dist/ad-ng-sf'));
+
+app.get('/*', (req,res) => res.sendFile(path.join(__dirname)));
+
+app.get('/contacts/', function(req, res) {
+    conn.query("SELECT Id, Name, CreatedDate FROM Contact LIMIT 10", function(err, result) {
+        if (err) { res.json(err); }
+        console.log("total : " + result.totalSize);
+        res.json(result);
+      });
+});
+const server = http.createServer(app);
+
+server.listen(port, () => console.log('Running...'));

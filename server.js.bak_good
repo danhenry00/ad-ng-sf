@@ -1,0 +1,46 @@
+const express = require('express');
+const http = require('http');
+const path = require ('path');
+const jsforce = require('jsforce');
+
+var oauth2 = new jsforce.OAuth2({
+    instanceUrl : 'https://dhenry-dev-ed.my.salesforce.com',
+    clientId : '3MVG9KsVczVNcM8ybEIOVLexG8jwFj6EDXCGwOYKwydNPAF5R6k14.alxAlslZV_XNstr.nst0dN3lk.LPi_a',
+    clientSecret : 'F0135AEA52D269F8C70FFE7B4F70E2DD7D1D8400EE34D2513E82202DF2EAA661',
+    redirectUri : 'http://localhost:3001/oauth2/callback'
+});
+
+var conn = new jsforce.Connection({ 
+    oauth2 : oauth2
+});
+
+conn.login('daniel@trailhead.com','Trail2020#V3HbPE12pv6ahArX8BpWDQ9i', (err, userInfo) => {
+    if (err) { return console.error(err); }
+    // Now you can get the access token and instance URL information.
+    // Save them to establish connection next time.
+    console.log(conn.accessToken);
+    console.log(conn.instanceUrl);
+    // logged in user property
+    console.log("User ID: " + userInfo.id);
+    console.log("Org ID: " + userInfo.organizationId);
+
+});
+
+const app = express();
+
+const port = process.env.PORT || 3001;
+
+app.use(express.static(__dirname + '/dist/ad-ng-sf'));
+
+app.get('/*', (req,res) => res.sendFile(path.join(__dirname)));
+
+app.get('/contacts/', function(req, res) {
+    conn.query("SELECT Id, Name, CreatedDate FROM Contact LIMIT 10", function(err, result) {
+        if (err) { res.json(err); }
+        console.log("total : " + result.totalSize);
+        res.json(result);
+      });
+});
+const server = http.createServer(app);
+
+server.listen(port, () => console.log('Running...'));
